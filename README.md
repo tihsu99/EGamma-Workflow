@@ -12,6 +12,8 @@ git clone https://github.com/tihsu99/EGamma-Workflow.git
 cd ../
 cmsrel [CMSSW VERSION]
 cmsenv
+# Optional: some custmized functions are in our `python` directory, could moved under to cmssw dir for running
+cp python/XXX.py [cmssw dir]/src/.
 ```
 
 ## Yaml Config
