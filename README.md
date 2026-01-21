@@ -5,8 +5,6 @@ mkdir EGM-Validation
 cd EGM-Validation
 git clone https://github.com/tihsu99/EGamma-Workflow.git
 
-# Optional: TnPTreeProducer
-git clone https://github.com/tihsu99/EgammaAnalysis-TnPTreeProducer.git -b tihsu_dev
 
 ```
 ## Set up cmssw env
@@ -55,5 +53,10 @@ Submit the condor and you should have results in the `eos-dir`.
 condor_submit [Farm_Dir]/condor_jobs.sub
 ```
 
-## Produce Trigger Efficiency
+## Summary plot [TODO/Update README]
+Several python plotting functions are stored in `plot_func`.
+- Trigger Efficiency: `plotHist.py`.
+- Variable Distribution: `plot_Phase2_EGM_Variables_v*.py`
+
+## Produce Trigger Efficiency  [TODO/Update README]
 Will put the instruction here soon. Quick example could be found in `notebook` 
