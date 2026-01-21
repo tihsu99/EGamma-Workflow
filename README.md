@@ -52,4 +52,4 @@ condor_submit [Farm_Dir]/condor_jobs.sub
 ```
 
 ## Produce Trigger Efficiency
-Will put the instruction here soon. 
+Will put the instruction here soon. Quick example could be found in `notebook` 
