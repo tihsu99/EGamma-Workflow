@@ -13,6 +13,7 @@ cmsenv
 ```
 
 ## Yaml Config
+The pipelines are full controled by the yaml files. This is the format it should follow. Several examples could be find in `config`.
 ```yaml
 cmssw-dir: [cmssw src path]
 eos-dir: [output storage place]
@@ -39,11 +40,13 @@ project:
       - tnpNtupler.root
 ```
 ## Produce condor jobs
+This create the running script without submission
 ```
 python3 submit_condor.py --n [N proceesed per file] --config config/phase2_tracking.yaml --proxy [userproxy] --farm [Farm]
 ```
 
 ## Submission
+Submit the condor and you should have results in the `eos-dir`.
 ```
 condor_submit [Farm_Dir]/condor_jobs.sub
 ```
