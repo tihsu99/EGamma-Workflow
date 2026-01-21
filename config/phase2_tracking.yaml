@@ -1,0 +1,76 @@
+cmssw-dir: /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3//src
+eos-dir: /eos/user/t/tihsu/database/Phase2_Tracking_HLT_Jan11
+
+project:
+
+  Reference:
+    dataset: 
+      - /RelValZpToEE_m6000_14TeV/CMSSW_16_0_0_pre3-PU_150X_mcRun4_realistic_v1_STD_Run4D110_PU-v1/GEN-SIM-DIGI-RAW
+    GT: auto:phase2_realistic_T33
+    process:
+      - cmsDriver.py Phase2 -s L1P2GT,HLT:75e33 --processName=HLTX --conditions auto:phase2_realistic_T33 --geometry ExtendedRun4D110 --era Phase2C17I13M9 --eventcontent FEVTDEBUGHLT --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,HLTrigger/Configuration/customizeHLTforEGamma.customiseEGammaMenuDev  --inputCommands='keep *, drop *_hlt*_*_HLT, drop triggerTriggerFilterObjectWithRefs_l1t*_*_HLT' --mc --no_exec   --python_filename hlt_phase2_mod.py
+      - cmsRun hlt_phase2_mod.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2.py --input-dir "./" -o validation.root -n 10000
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2_v2.py Phase2_L1P2GT_HLT.root -o detailedvalidation.root
+      - cmsDriver.py step2_RECO_MINI -s RAW2DIGI,L1Reco,RECO,RECOSIM,PAT --conditions auto:phase2_realistic_T33 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry ExtendedRun4D110 --era Phase2C17I13M9 --filein file:Phase2_L1P2GT_HLT.root --fileout file:stepMINI.root --hltProcess HLTX --mc --no_exec --python_filename hlt_ministep.py
+      - cmsRun hlt_ministep.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/lastFilterEffHist_Upgrade_MINIAOD.py stepMINI.root -o tnpNtupler.root
+
+    storefile:
+      - validation.root
+      - detailedvalidation.root
+      - tnpNtupler.root
+
+  Reference_ZEE:
+    dataset:
+      - /RelValZEE_14/CMSSW_16_0_0_pre3-PU_150X_mcRun4_realistic_v1_STD_Run4D110_PU-v1/GEN-SIM-DIGI-RAW
+    GT: auto:phase2_realistic_T33
+    process:
+      - cmsDriver.py Phase2 -s L1P2GT,HLT:75e33 --processName=HLTX --conditions auto:phase2_realistic_T33 --geometry ExtendedRun4D110 --era Phase2C17I13M9 --eventcontent FEVTDEBUGHLT --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,HLTrigger/Configuration/customizeHLTforEGamma.customiseEGammaMenuDev  --inputCommands='keep *, drop *_hlt*_*_HLT, drop triggerTriggerFilterObjectWithRefs_l1t*_*_HLT' --mc --no_exec   --python_filename hlt_phase2_mod.py
+      - cmsRun hlt_phase2_mod.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2.py --input-dir "./" -o validation.root -n 10000
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2_v2.py Phase2_L1P2GT_HLT.root -o detailedvalidation.root
+      - cmsDriver.py step2_RECO_MINI -s RAW2DIGI,L1Reco,RECO,RECOSIM,PAT --conditions auto:phase2_realistic_T33 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry ExtendedRun4D110 --era Phase2C17I13M9 --filein file:Phase2_L1P2GT_HLT.root --fileout file:stepMINI.root --hltProcess HLTX --mc --no_exec --python_filename hlt_ministep.py
+      - cmsRun hlt_ministep.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/lastFilterEffHist_Upgrade_MINIAOD.py stepMINI.root -o tnpNtupler.root
+    storefile:
+      - validation.root
+      - detailedvalidation.root
+      - tnpNtupler.root
+
+  Target:
+    dataset:
+      - /RelValZpToEE_m6000_14TeV/CMSSW_16_0_0_pre3-PU_150X_mcRun4_realistic_v1_STD_Run4D110_PU-v1/GEN-SIM-DIGI-RAW
+    GT: auto:phase2_realistic_T33
+    process:
+      - cmsDriver.py Phase2 -s L1P2GT,HLT:75e33 --processName=HLTX --conditions auto:phase2_realistic_T33 --geometry ExtendedRun4D110 --era Phase2C17I13M9 --eventcontent FEVTDEBUGHLT --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,HLTrigger/Configuration/customizeHLTforEGamma.customiseEGammaMenuDev  --inputCommands='keep *, drop *_hlt*_*_HLT, drop triggerTriggerFilterObjectWithRefs_l1t*_*_HLT' --mc --procModifier singleIterPatatrack,phase2CAExtension,trackingLST,seedingLST,trackingMkFitCommon,hltTrackingMkFitInitialStep --no_exec   --python_filename hlt_phase2_mod.py
+      - cmsRun hlt_phase2_mod.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2.py --input-dir "./" -o validation.root -n 10000
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2_v2.py Phase2_L1P2GT_HLT.root -o detailedvalidation.root
+      - cmsDriver.py step2_RECO_MINI -s RAW2DIGI,L1Reco,RECO,RECOSIM,PAT --conditions auto:phase2_realistic_T33 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry ExtendedRun4D110 --era Phase2C17I13M9 --filein file:Phase2_L1P2GT_HLT.root --fileout file:stepMINI.root --hltProcess HLTX --mc --no_exec --python_filename hlt_ministep.py
+      - cmsRun hlt_ministep.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/lastFilterEffHist_Upgrade_MINIAOD.py stepMINI.root -o tnpNtupler.root
+
+    storefile:
+      - validation.root
+      - detailedvalidation.root
+      - tnpNtupler.root
+
+  Target_ZEE:
+    dataset:
+      - /RelValZEE_14/CMSSW_16_0_0_pre3-PU_150X_mcRun4_realistic_v1_STD_Run4D110_PU-v1/GEN-SIM-DIGI-RAW
+    GT: auto:phase2_realistic_T33
+    process:
+      - cmsDriver.py Phase2 -s L1P2GT,HLT:75e33 --processName=HLTX --conditions auto:phase2_realistic_T33 --geometry ExtendedRun4D110 --era Phase2C17I13M9 --eventcontent FEVTDEBUGHLT --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,HLTrigger/Configuration/customizeHLTforEGamma.customiseEGammaMenuDev  --inputCommands='keep *, drop *_hlt*_*_HLT, drop triggerTriggerFilterObjectWithRefs_l1t*_*_HLT' --mc --procModifier singleIterPatatrack,phase2CAExtension,trackingLST,seedingLST,trackingMkFitCommon,hltTrackingMkFitInitialStep --no_exec   --python_filename hlt_phase2_mod.py
+      - cmsRun hlt_phase2_mod.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2.py --input-dir "./" -o validation.root -n 10000
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/makeNtuples_Phase2_v2.py Phase2_L1P2GT_HLT.root -o detailedvalidation.root
+      - cmsDriver.py step2_RECO_MINI -s RAW2DIGI,L1Reco,RECO,RECOSIM,PAT --conditions auto:phase2_realistic_T33 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry ExtendedRun4D110 --era Phase2C17I13M9 --filein file:Phase2_L1P2GT_HLT.root --fileout file:stepMINI.root --hltProcess HLTX --mc --no_exec --python_filename hlt_ministep.py
+      - cmsRun hlt_ministep.py
+      - python3 /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre3/src/lastFilterEffHist_Upgrade_MINIAOD.py stepMINI.root -o tnpNtupler.root
+
+    storefile:
+      - validation.root
+      - detailedvalidation.root
+      - tnpNtupler.root
+

@@ -1,0 +1,43 @@
+cmssw-dir: /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_X_2026-01-12-2300/src
+eos-dir: /eos/user/t/tihsu/database/Pixel_Support/Efficiency_Check
+
+project:
+    Reference:
+      dataset:
+        - /EGamma0/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+        - /EGamma1/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+        - /EGamma2/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+        - /EGamma3/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+      GT: 150X_dataRun3_HLT_v1
+
+      process:
+        -  cmsDriver.py --conditions 150X_dataRun3_HLT_v1 --data --datatier RECO --era Run3_2025 --eventcontent RECO --scenario pp --step HLT:Reference --process MYHLT  --fileout file:hltOutput_RECO_Reference.root --python_filename hlt_ReRun_Config_Reference.py
+        -  cmsDriver.py stepMINI -s PAT --conditions 150X_dataRun3_Prompt_v1 --datatier MINIAOD --eventcontent MINIAOD --geometry DB:Extended --era Run3_2025 --hltProcess MYHLT  --filein file:hltOutput_RECO_Reference.root --fileout file:stepMINI_Reference.root --python_filename makeMini_cfg_ref.py
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src
+        -  eval `scramv1 runtime -sh`
+        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=False isAOD=False era=2025 doTrigger=True inputFiles=file:stepMINI_Reference.root outputFile=file:tnpNtuple_Reference.root
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_X_2026-01-12-2300/src
+        -  eval `scramv1 runtime -sh`
+        -  cd $WORKDIR
+      storefile:
+        - tnpNtuple_Reference.root    
+
+    Target:
+      dataset:
+        - /EGamma0/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+        - /EGamma1/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+        - /EGamma2/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+        - /EGamma3/Run2025G-ZElectron-PromptReco-v1/RAW-RECO
+      GT: 150X_dataRun3_HLT_v1
+
+      process:
+        - cmsDriver.py --conditions 150X_dataRun3_HLT_v1 --data --datatier RECO --era Run3_2025 --eventcontent RECO --scenario pp --step HLT:Target --process MYHLT --fileout file:hltOutput_RECO_Target.root --python_filename hlt_ReRun_Config_Target.py
+        - cmsDriver.py stepMINI -s PAT --conditions 150X_dataRun3_Prompt_v1 --datatier MINIAOD --eventcontent MINIAOD --geometry DB:Extended --era Run3_2025 --hltProcess MYHLT --filein file:hltOutput_RECO_Target.root --fileout file:stepMINI_Target.root --python_filename makeMini_cfg_tgt.py
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src
+        -  eval `scramv1 runtime -sh`
+        - cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=False isAOD=False era=2025 doTrigger=True inputFiles=file:stepMINI_Target.root outputFile=file:tnpNtuple_Target.root
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_X_2026-01-12-2300/src
+        -  eval `scramv1 runtime -sh`
+        -  cd $WORKDIR
+      storefile:
+        - tnpNtuple_Target.root 
