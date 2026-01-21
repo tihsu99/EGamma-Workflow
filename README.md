@@ -4,6 +4,10 @@
 mkdir EGM-Validation
 cd EGM-Validation
 git clone https://github.com/tihsu99/EGamma-Workflow.git
+
+# Optional: TnPTreeProducer
+git clone https://github.com/tihsu99/EgammaAnalysis-TnPTreeProducer.git -b tihsu_dev
+
 ```
 ## Set up cmssw env
 ```
