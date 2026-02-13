@@ -14,7 +14,7 @@ ssh USERNAME@lxplus.cern.ch -L8787:localhost:8787 # 8787 could be changed
 
 # [First time] Install & Create Clean Virtual Environment for the run.
 
-git clone -b 2024_Studies git@github.com:saumyaphor4252/egamma-tnp.git
+git clone -b 2024_Studies git@github.com:tihsu99/egamma-tnp.git
 cd egamma-tnp/
 python3 -m venv egmtnpenv
 source egmtnpenv/bin/activate
