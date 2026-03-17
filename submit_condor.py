@@ -13,8 +13,12 @@ parser.add_argument("--farm", type=str, default="Farm",
 parser.add_argument("--nEvent", type=int, default=-1)
 parser.add_argument("--config", type=str)
 parser.add_argument("--proxy", type=str, default=None)
+parser.add_argument("--after_run", type=int, default=None)
+
 args = parser.parse_args()
 jobflavor = args.jobFlavour
+
+min_run = args.after_run
 
 # Load YAML
 with open(args.config) as f:
@@ -25,13 +29,19 @@ eos_dir = cfg['eos-dir']
 
 shell_scripts = []
 
-def get_das_files(dataset):
+def get_das_files(dataset, min_run=None):
 
   das_command = f'dasgoclient -query="file dataset={dataset}"'
   files = os.popen(das_command).read().strip().split("\n")
   accessible = []
 
   for file in files:
+    #  /store/data/Run2025G/EGamma0/RAW-RECO/ZElectron-PromptReco-v1/000/398/828/00000/56b308f5-c2e1-45fc-9ecd-0a37765cd4a3.root
+    run = file.split("/")[-4] + file.split("/")[-3]
+    run = int(run)
+    if min_run:
+        if run < min_run:
+            continue
     file_path = f"/eos/cms/{file}"
 
     if os.path.exists(file_path):
@@ -43,6 +53,7 @@ def get_das_files(dataset):
 
 for project_name, project_cfg in cfg['project'].items():
     project_eos_dir = os.path.join(eos_dir, project_name)
+    print("project_eos_dir", project_eos_dir)
     os.makedirs(project_eos_dir, exist_ok=True)
 
     farm_dir = os.path.join(args.farm, project_name)
@@ -50,7 +61,7 @@ for project_name, project_cfg in cfg['project'].items():
     
     all_input_files = []
     for ds in project_cfg['dataset']:
-        all_input_files.extend(get_das_files(ds))
+        all_input_files.extend(get_das_files(ds, min_run = args.after_run))
     
     start_idx = 0
     end_idx = min(args.n, len(all_input_files))
@@ -81,11 +92,21 @@ for project_name, project_cfg in cfg['project'].items():
                        cmd_tmp += f" --customise_commands 'process.maxEvents.input=cms.untracked.int32({args.nEvent})' "
                     f.write(f"echo 'Running step {i+1}'\n")
                     f.write(f"{cmd_tmp}\n")
-        
+       
+                root_list = []
                 for storefile in project_cfg.get('storefile', []):
-                    eos_path = os.path.join(project_eos_dir, storefile.replace(".root", f"_{file_idx}.root"))
-                    f.write(f"xrdcp $WORKDIR/{storefile} root://eosuser.cern.ch/{eos_path}\n")
+                    if "root" in storefile:
+                        eos_path = os.path.join(project_eos_dir, storefile.replace(".root", f"_{file_idx}.root"))
+                        f.write(f"xrdcp $WORKDIR/{storefile} root://eosuser.cern.ch/{eos_path}\n")
+                    else:
+                        root = storefile.split(".")[-1]
+                        if root not in root_list:
+                            root_list.append(root)
+                        eos_path =  os.path.join(project_eos_dir, storefile.replace(f".{root}", f"_{file_idx}.{root}"))
+                        f.write(f"cp  $WORKDIR/{storefile} {eos_path}\n")
                 f.write("rm $WORKDIR/*.root\n")
+                for root_ in root_list:
+                  f.write(f"rm $WORKDIR/*.{root_}\n")
     
         os.chmod(script_name, 0o755)
         shell_scripts.append(script_name)
