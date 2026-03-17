@@ -14,6 +14,7 @@ parser.add_argument("--nEvent", type=int, default=-1)
 parser.add_argument("--config", type=str)
 parser.add_argument("--proxy", type=str, default=None)
 parser.add_argument("--after_run", type=int, default=None)
+parser.add_argument("--select_run", type=int, default=None)
 
 args = parser.parse_args()
 jobflavor = args.jobFlavour
@@ -29,7 +30,7 @@ eos_dir = cfg['eos-dir']
 
 shell_scripts = []
 
-def get_das_files(dataset, min_run=None):
+def get_das_files(dataset, min_run=None, select_run=None):
 
   das_command = f'dasgoclient -query="file dataset={dataset}"'
   files = os.popen(das_command).read().strip().split("\n")
@@ -41,6 +42,9 @@ def get_das_files(dataset, min_run=None):
     run = int(run)
     if min_run:
         if run < min_run:
+            continue
+    if select_run:
+        if not (int(run) == int(select_run)):
             continue
     file_path = f"/eos/cms/{file}"
 
@@ -61,7 +65,7 @@ for project_name, project_cfg in cfg['project'].items():
     
     all_input_files = []
     for ds in project_cfg['dataset']:
-        all_input_files.extend(get_das_files(ds, min_run = args.after_run))
+        all_input_files.extend(get_das_files(ds, min_run = args.after_run, select_run=args.select_run))
     
     start_idx = 0
     end_idx = min(args.n, len(all_input_files))
