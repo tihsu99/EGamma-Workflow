@@ -8,13 +8,14 @@ parser = argparse.ArgumentParser(description="Prepare Condor jobs for HLT rerun"
 parser.add_argument("--jobFlavour", type=str, default="tomorrow",
                     help="Condor jobflavor (e.g., espresso, longlunch, workday, tomorrow)")
 parser.add_argument("--n", type=int, default=10, help="Number of DAS files per shell script")
+parser.add_argument("--max_submission", type=int, default=None)
 parser.add_argument("--farm", type=str, default="Farm",
                     help="farm directory")
 parser.add_argument("--nEvent", type=int, default=-1)
 parser.add_argument("--config", type=str)
 parser.add_argument("--proxy", type=str, default=None)
 parser.add_argument("--after_run", type=int, default=None)
-parser.add_argument("--select_run", type=int, default=None)
+parser.add_argument("--select_run", type=int, default=None, nargs="+")
 
 args = parser.parse_args()
 jobflavor = args.jobFlavour
@@ -36,7 +37,7 @@ def get_das_files(dataset, min_run=None, select_run=None):
   files = os.popen(das_command).read().strip().split("\n")
   accessible = []
 
-  for file in files:
+  for n_file, file in enumerate(files):
     #  /store/data/Run2025G/EGamma0/RAW-RECO/ZElectron-PromptReco-v1/000/398/828/00000/56b308f5-c2e1-45fc-9ecd-0a37765cd4a3.root
     run = file.split("/")[-4] + file.split("/")[-3]
     run = int(run)
@@ -44,13 +45,14 @@ def get_das_files(dataset, min_run=None, select_run=None):
         if run < min_run:
             continue
     if select_run:
-        if not (int(run) == int(select_run)):
+        if not (int(run) in select_run):
             continue
     file_path = f"/eos/cms/{file}"
 
     if os.path.exists(file_path):
         accessible.append(f"file:{file_path}")
-    
+    else:
+        accessible.append(f"root://cms-xrd-global.cern.ch//{file}")
   return accessible
 
 
@@ -71,6 +73,8 @@ for project_name, project_cfg in cfg['project'].items():
     end_idx = min(args.n, len(all_input_files))
     bunch_idx = 0
     while (end_idx < (len(all_input_files))):
+        if (args.max_submission is not None and bunch_idx >= args.max_submission):
+           break
         script_name = os.path.join(farm_dir, f"run_{project_name}_{bunch_idx}.sh")
         workspace = f"$TMPDIR/Job_{project_name}_{bunch_idx}"
         print(f"creating {script_name}")
