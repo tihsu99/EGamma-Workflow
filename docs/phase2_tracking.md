@@ -9,4 +9,5 @@ cd CMSSW_16_0_0_pre3/src
 cmsenv
 git cms-addpkg HLTrigger/Configuration
 cp [EGamma_WORKFLOW_DIR]/python/customizeHLTforEGamma.py [WORKDIR]/HLTrigger/Configuration/python/.
+scram b -j 8
 ```

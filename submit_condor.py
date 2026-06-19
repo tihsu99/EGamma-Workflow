@@ -39,14 +39,15 @@ def get_das_files(dataset, min_run=None, select_run=None):
 
   for n_file, file in enumerate(files):
     #  /store/data/Run2025G/EGamma0/RAW-RECO/ZElectron-PromptReco-v1/000/398/828/00000/56b308f5-c2e1-45fc-9ecd-0a37765cd4a3.root
-    run = file.split("/")[-4] + file.split("/")[-3]
-    run = int(run)
-    if min_run:
-        if run < min_run:
-            continue
-    if select_run:
-        if not (int(run) in select_run):
-            continue
+    if min_run or select_run:
+        run = file.split("/")[-4] + file.split("/")[-3]
+        run = int(run)
+        if min_run:
+            if run < min_run:
+                continue
+        if select_run:
+            if not (int(run) in select_run):
+                continue
     file_path = f"/eos/cms/{file}"
 
     if os.path.exists(file_path):
