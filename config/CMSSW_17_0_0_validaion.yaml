@@ -1,4 +1,4 @@
-cmssw-dir: /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2
+cmssw-dir: /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4
 eos-dir: /eos/user/t/tihsu/database/CMS_HLTJIRA/CMSSW_17_0_0_validation
 
 project:
@@ -8,9 +8,9 @@ project:
       GT: 160X_dataRun3_HLT_v1
 
       process:
-        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src
         -  eval `scramv1 runtime -sh`
-        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Reference.root
+        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Reference.root
         -  cd $WORKDIR
       storefile:
         - tnpNtuple_Reference.root    
@@ -21,9 +21,9 @@ project:
       GT: 160X_dataRun3_HLT_v1
 
       process:
-        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src
         -  eval `scramv1 runtime -sh`
-        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Target.root
+        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Target.root
         -  cd $WORKDIR
       storefile:
         - tnpNtuple_Target.root 
