@@ -106,8 +106,10 @@ for project_name, project_cfg in cfg['project'].items():
                     if "TnPTreeProducer" in cmd_tmp:
                         cmd_tmp = cmd_tmp.replace('outputFile=file:', 'outputFile=')
                     if i == input_step:
-                       input_option = '--filein' if 'cmsDriver' in cmd_tmp else '--inputFiles'
-                       cmd_tmp += f" {input_option} {all_input_files[file_idx]} "
+                       if 'cmsDriver' in cmd_tmp:
+                           cmd_tmp += f" --filein {all_input_files[file_idx]} "
+                       else:
+                           cmd_tmp += f" inputFiles={all_input_files[file_idx]} "
                     if 'cmsDriver' in cmd_tmp:
                        cmd_tmp += f" --customise_commands 'process.maxEvents.input=cms.untracked.int32({args.nEvent})' "
                     f.write(f"echo 'Running step {i+1}'\n")
