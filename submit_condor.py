@@ -76,10 +76,6 @@ for project_name, project_cfg in cfg['project'].items():
     bunch_idx = 0
     while start_idx < len(all_input_files):
         end_idx = min(start_idx + args.n, len(all_input_files))
-        # existing job creation code
-        start_idx = end_idx
-        bunch_idx += 1
-    # while (end_idx < (len(all_input_files))):
         if (args.max_submission is not None and bunch_idx >= args.max_submission):
            break
         script_name = os.path.join(farm_dir, f"run_{project_name}_{bunch_idx}.sh")
@@ -125,8 +121,7 @@ for project_name, project_cfg in cfg['project'].items():
     
         os.chmod(script_name, 0o755)
         shell_scripts.append(script_name)
-        end_idx += args.n
-        start_idx += args.n
+        start_idx = end_idx
         bunch_idx += 1
 
 
@@ -142,4 +137,3 @@ condor_str += f'+JobFlavour = "{args.jobFlavour}"\n'
 condor_str += f"queue filename matching ({args.farm}/*/*.sh)"
 condor_file = open(sub_file, "w")
 condor_file.write(condor_str)
-
