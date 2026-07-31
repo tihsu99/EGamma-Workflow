@@ -56,9 +56,8 @@ def get_das_files(dataset, min_run=None, select_run=None):
         accessible.append(f"file:{file_path}")
     else:
         accessible.append(f"root://cms-xrd-global.cern.ch//{file}")
+  print(accessible)
   return accessible
-
-
 
 for project_name, project_cfg in cfg['project'].items():
     project_eos_dir = os.path.join(eos_dir, project_name)
