@@ -1,0 +1,29 @@
+cmssw-dir: /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2
+eos-dir: /eos/user/t/tihsu/database/CMS_HLTJIRA/CMSSW_17_0_0_validation
+
+project:
+    Reference:
+      dataset:
+        - /RelValZEE_14/CMSSW_16_0_0_pre4-PU_151X_mcRun3_2025_realistic_v4_STD_ReHLT_2025_PU-v2/MINIAODSIM
+      GT: 160X_dataRun3_HLT_v1
+
+      process:
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src
+        -  eval `scramv1 runtime -sh`
+        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Reference.root
+        -  cd $WORKDIR
+      storefile:
+        - tnpNtuple_Reference.root    
+
+    Target:
+      dataset:
+        - /RelValZEE_14/CMSSW_17_0_0_pre1-PU_160X_mcRun3_2026_realistic_v6_STD_2026_RegeneratedGS_PU_20260519_170938-v2/MINIAODSIM
+      GT: 160X_dataRun3_HLT_v1
+
+      process:
+        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src
+        -  eval `scramv1 runtime -sh`
+        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre2/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Target.root
+        -  cd $WORKDIR
+      storefile:
+        - tnpNtuple_Target.root 
