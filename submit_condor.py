@@ -70,6 +70,14 @@ for project_name, project_cfg in cfg['project'].items():
     all_input_files = []
     for ds in project_cfg['dataset']:
         all_input_files.extend(get_das_files(ds, min_run = args.after_run, select_run=args.select_run))
+
+    input_step = next(
+        (i for i, cmd in enumerate(project_cfg['process'])
+         if 'cmsDriver' in cmd or 'cmsRun' in cmd),
+        None,
+    )
+    if input_step is None:
+        raise ValueError(f"Project {project_name} has no cmsDriver or cmsRun input step")
     
     start_idx = 0
     end_idx = min(args.n, len(all_input_files))
@@ -97,7 +105,7 @@ for project_name, project_cfg in cfg['project'].items():
                     cmd_tmp = cmd.replace("file:", f"file:$WORKDIR/")
                     if "TnPTreeProducer" in cmd_tmp:
                         cmd_tmp = cmd_tmp.replace('outputFile=file:', 'outputFile=')
-                    if i == 0:
+                    if i == input_step:
                        cmd_tmp += f" --filein {all_input_files[file_idx]} "
                     if 'cmsDriver' in cmd_tmp:
                        cmd_tmp += f" --customise_commands 'process.maxEvents.input=cms.untracked.int32({args.nEvent})' "
