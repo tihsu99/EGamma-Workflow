@@ -36,6 +36,8 @@ def get_das_files(dataset, min_run=None, select_run=None):
   das_command = f'dasgoclient -query="file dataset={dataset}"'
   files = os.popen(das_command).read().strip().split("\n")
   accessible = []
+  print(files)
+
 
   for n_file, file in enumerate(files):
     #  /store/data/Run2025G/EGamma0/RAW-RECO/ZElectron-PromptReco-v1/000/398/828/00000/56b308f5-c2e1-45fc-9ecd-0a37765cd4a3.root
