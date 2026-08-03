@@ -4,12 +4,12 @@ eos-dir: /eos/user/t/tihsu/database/CMS_HLTJIRA/CMSSW_17_0_0_validation
 project:
     Reference:
       dataset:
-        - /RelValZEE_14/CMSSW_16_0_0_pre4-PU_151X_mcRun3_2025_realistic_v4_STD_ReHLT_2025_PU-v2/MINIAODSIM
-      GT: 160X_dataRun3_HLT_v1
+        - /RelValZEE_14/CMSSW_16_0_0_pre4-PU_151X_mcRun3_2025_realistic_v4_STD_ReHLT_2025_PU-v2/GEN-SIM-RECO
+      GT: 151X_mcRun3_2025_realistic_v4
 
       process:
         -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src
-        - cmsDriver.py stepMINI -s PAT --conditions 151X_mcRun3_2025_realistic_v4 --datatier MINIAOD --eventcontent MINIAOD --geometry DB:Extended --era Run3_2026 --hltProcess HLT  --fileout file:stepMINI_Reference.root --python_filename makeMini_cfg_reference.py
+        - cmsDriver.py stepMINI --mc -s PAT --conditions 151X_mcRun3_2025_realistic_v4 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry DB:Extended --era Run3_2026 --hltProcess HLT  --fileout file:stepMINI_Reference.root --python_filename makeMini_cfg_reference.py
         -  eval `scramv1 runtime -sh`
         -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_mc_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Reference.root inputFiles=file:stepMINI_Reference.root
         -  cd $WORKDIR
