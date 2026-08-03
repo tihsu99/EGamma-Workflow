@@ -17,7 +17,7 @@ project:
 
     Target:
       dataset:
-        - /RelValZEE_14/CMSSW_17_0_0_pre1-PU_160X_mcRun3_2026_realistic_v6_STD_2026_RegeneratedGS_PU_20260519_170938-v2/MINIAOD
+        - /RelValZEE_14/CMSSW_17_0_0_pre1-PU_160X_mcRun3_2026_realistic_v6_STD_2026_RegeneratedGS_PU_20260519_170938-v2/MINIAODSIM
       GT: 160X_mcRun3_2026_realistic_v6
 
       process:
