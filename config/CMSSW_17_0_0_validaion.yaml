@@ -8,11 +8,12 @@ project:
       GT: 151X_mcRun3_2025_realistic_v4
 
       process:
-        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src
+        - cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src
+        - eval `scramv1 runtime -sh`
         - cmsDriver.py stepMINI --mc -s PAT --conditions 151X_mcRun3_2025_realistic_v4 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry DB:Extended --era Run3_2026 --hltProcess HLT  --fileout file:stepMINI_Reference.root --python_filename makeMini_cfg_reference.py
-        -  eval `scramv1 runtime -sh`
-        -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_mc_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Reference.root inputFiles=file:stepMINI_Reference.root
-        -  cd $WORKDIR
+        - cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src
+        - eval `scramv1 runtime -sh`
+        - cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_mc_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Reference.root inputFiles=file:stepMINI_Reference.root
       storefile:
         - tnpNtuple_Reference.root    
 
@@ -23,9 +24,9 @@ project:
 
       process:
         -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src
+        - eval `scramv1 runtime -sh`
 #        - cmsDriver.py --conditions 160X_mcRun3_2026_realistic_v6 --mc --datatier RECO --era Run3_2026 --eventcontent RECO --scenario pp --step HLT --process MYHLT  --fileout file:hltOutput_RECO_Target.root --python_filename hlt_ReRun_Config_Target.py
         - cmsDriver.py stepMINI --mc -s PAT --conditions 160X_mcRun3_2026_realistic_v6 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry DB:Extended --era Run3_2026 --hltProcess HLT  --fileout file:stepMINI_Target.root --python_filename makeMini_cfg_target.py
-        -  eval `scramv1 runtime -sh`
         -  cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_mc_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Target.root inputFiles=file:stepMINI_Target.root
         -  cd $WORKDIR
       storefile:
