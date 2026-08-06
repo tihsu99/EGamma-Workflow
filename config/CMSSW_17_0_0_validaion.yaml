@@ -23,7 +23,7 @@ project:
       GT: 160X_mcRun3_2026_realistic_v6
 
       process:
-        -  cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src
+        - cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src
         - eval `scramv1 runtime -sh`
 #        - cmsDriver.py --conditions 160X_mcRun3_2026_realistic_v6 --mc --datatier RECO --era Run3_2026 --eventcontent RECO --scenario pp --step HLT --process MYHLT  --fileout file:hltOutput_RECO_Target.root --python_filename hlt_ReRun_Config_Target.py
         - cmsDriver.py stepMINI --mc -s PAT --conditions 160X_mcRun3_2026_realistic_v6 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry DB:Extended --era Run3_2026 --hltProcess HLT  --fileout file:stepMINI_Target.root --python_filename makeMini_cfg_target.py
