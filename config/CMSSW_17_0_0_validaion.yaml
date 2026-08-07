@@ -10,10 +10,10 @@ project:
       process:
         - cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_16_0_0_pre4/src
         - eval `scramv1 runtime -sh`
-        - cmsDriver.py stepMINI --mc -s PAT --conditions 151X_mcRun3_2025_realistic_v4 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry DB:Extended --era Run3_2026 --hltProcess HLT  --fileout file:stepMINI_Reference.root --python_filename makeMini_cfg_reference.py
+        - cmsDriver.py stepMINI --mc -s PAT --conditions 151X_mcRun3_2025_realistic_v4 --datatier MINIAODSIM --eventcontent MINIAODSIM --geometry DB:Extended --era Run3_2025 --hltProcess HLT  --fileout file:stepMINI_Reference.root --python_filename makeMini_cfg_reference.py
         - cd /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src
         - eval `scramv1 runtime -sh`
-        - cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_mc_cfg.py isMC=True isAOD=False era=2026 doTrigger=True outputFile=file:tnpNtuple_Reference.root inputFiles=file:stepMINI_Reference.root
+        - cmsRun /afs/cern.ch/user/t/tihsu/EGM_HLT_JIRA/CMSSW_17_0_0_pre1/src/EgammaAnalysis/TnPTreeProducer/python/TnPTreeProducer_mc_cfg.py isMC=True isAOD=False era=2025 doTrigger=True outputFile=file:tnpNtuple_Reference.root inputFiles=file:stepMINI_Reference.root
       storefile:
         - tnpNtuple_Reference.root    
 

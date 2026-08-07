@@ -1,0 +1,110 @@
+hlt_paths:
+  HLT_Ele30_WPTight_Gsf:
+    plateau_cut: 35
+    filters:
+      - passHLTEG30L1SingleEGOrEtFilter
+      - passHLTEle30WPTightClusterShapeFilter
+      - passHLTEle30WPTightHEFilter
+      - passHLTEle30WPTightEcalIsoFilter
+      - passHLTEle30WPTightHcalIsoFilter
+      - passHLTEle30WPTightPixelMatchFilter
+      - passHLTEle30WPTightPMS2Filter
+      - passHLTEle30WPTightGsfOneOEMinusOneOPFilter
+      - passHLTEle30WPTightGsfMissingHitsFilter
+      - passHLTEle30WPTightGsfDetaFilter
+      - passHLTEle30WPTightGsfDphiFilter
+      - passHLTEle30WPTightGsfTrackIsoFilter
+
+  HLT_Ele32_WPTight_Gsf:
+    plateau_cut: 35
+    filters:
+      - passHLTEG32L1SingleEGOrEtFilter
+      - passHLTEle32WPTightClusterShapeFilter
+      - passHLTEle32WPTightHEFilter
+      - passHLTEle32WPTightEcalIsoFilter
+      - passHLTEle32WPTightHcalIsoFilter
+      - passHLTEle32WPTightPixelMatchFilter
+      - passHLTEle32WPTightPMS2Filter
+      - passHLTEle32WPTightGsfOneOEMinusOneOPFilter
+      - passHLTEle32WPTightGsfMissingHitsFilter
+      - passHLTEle32WPTightGsfDetaFilter
+      - passHLTEle32WPTightGsfDphiFilter
+      - passHLTEle32WPTightGsfTrackIsoFilter
+
+  HLT_Ele35_WPTight_Gsf:
+    plateau_cut: 40
+    filters:
+      - passhltEle35noerWPTightClusterShapeFilter
+      - passhltEle35noerWPTightHEFilter
+      - passhltEle35noerWPTightEcalIsoFilter
+      - passhltEle35noerWPTightHcalIsoFilter
+      - passhltEle35noerWPTightPixelMatchFilter
+      - passhltEle35noerWPTightPMS2Filter
+      - passhltEle35noerWPTightGsfOneOEMinusOneOPFilter
+      - passhltEle35noerWPTightGsfMissingHitsFilter
+      - passhltEle35noerWPTightGsfDetaFilter
+      - passhltEle35noerWPTightGsfDphiFilter
+      - passhltEle35noerWPTightGsfTrackIsoFilter
+
+  HLT_Ele115_CaloIdVT_GsfTrkIdT:
+    plateau_cut: 120
+    high_threshold: true
+    filters:
+      - passHLTEGL1SingleEGNonIsoOrWithJetAndTauFilter
+      - passHLTEG115EtFilter
+      - passHLTEG115CaloIdVTClusterShapeFilter
+      - passHLTEG115CaloIdVTHEFilter
+      - passHLTEle115CaloIdVTPixelMatchFilter
+      - passHLTEle115CaloIdVTGsfTrkIdTGsfDetaFilter
+      - passHLTEle115CaloIdVTGsfTrkIdTGsfDphiFilter
+
+  HLT_Ele135_CaloIdVT_GsfTrkIdT:
+    plateau_cut: 140
+    high_threshold: true
+    filters:
+      - passHLTEG135EtFilter
+      - passHLTEG135CaloIdVTClusterShapeFilter
+      - passHLTEG135CaloIdVTHEFilter
+      - passHLTEle135CaloIdVTPixelMatchFilter
+      - passHLTEle135CaloIdVTGsfTrkIdTGsfDetaFilter
+      - passHLTEle135CaloIdVTGsfTrkIdTGsfDphiFilter
+
+  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL:
+    plateau_cut: 25
+    filters:
+      - passHLTEGL1SingleAndDoubleEGOrPairFilter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLEtLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLEtLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLClusterShapeLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLClusterShapeLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLHELeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLHELeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLEcalIsoLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLEcalIsoLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLHcalIsoLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLHcalIsoLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLPixelMatchLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLPixelMatchLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLOneOEMinusOneOPLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLOneOEMinusOneOPLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLDetaLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLDetaLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLDphiLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLDphiLeg2Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLTrackIsoLeg1Filter
+      - passHLTEle23Ele12CaloIdLTrackIdLIsoVLTrackIsoLeg2Filter
+
+  HLT_DoubleEle33_CaloIdL_MW:
+    plateau_cut: 35
+    filters:
+      - passHLTEGL1SingleAndDoubleEGNonIsoOrWithEG26WithJetAndTauFilter
+      - passHLTEG33EtFilter
+      - passHLTEG33HEFilter
+      - passHLTEG33CaloIdLClusterShapeFilter
+      - passHLTEle33CaloIdLPixelMatchFilter
+      - passHLTEle33CaloIdLMWPMS2Filter
+      - passHLTDiEG33EtUnseededFilter
+      - passHLTDiEG33HEUnseededFilter
+      - passHLTDiEG33CaloIdLClusterShapeUnseededFilter
+      - passHLTDiEle33CaloIdLPixelMatchUnseededFilter
+      - passHLTDiEle33CaloIdLMWPMS2UnseededFilter
