@@ -12,6 +12,7 @@ import uproot
 import yaml
 from coffea.dataset_tools import preprocess
 from dask.diagnostics import ProgressBar
+from distributed import Client, progress
 from egamma_tnp import ElectronTagNProbeFromNTuples
 from egamma_tnp.plot import plot_ratio
 from egamma_tnp.utils.histogramming import save_hists
@@ -50,6 +51,12 @@ def parse_args():
     parser.add_argument("--tree", default="tnpEleTrig/fitter_tree")
     parser.add_argument("--cutbased-id", default="passingCutBasedTight122XV1")
     parser.add_argument("--rlabel", default="2026 (13.6 TeV)")
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Number of local Dask worker processes (default: 1)",
+    )
     return parser.parse_args()
 
 
@@ -161,6 +168,8 @@ def main():
     args = parse_args()
     if args.reference_label == args.target_label:
         raise ValueError("Reference and target labels must be different")
+    if args.workers < 1:
+        raise ValueError("--workers must be at least 1")
 
     LOGGER.info("Loading configuration: %s", args.config)
     hlt_paths = load_hlt_paths(args.config)
@@ -205,10 +214,21 @@ def main():
         }
 
     dak.necessary_columns(to_compute)
-    LOGGER.info("Computing all efficiency histograms")
+    LOGGER.info("Computing all efficiency histograms with %d worker(s)", args.workers)
     started = perf_counter()
-    with ProgressBar():
-        (results,) = dask.compute(to_compute)
+    if args.workers == 1:
+        with ProgressBar():
+            (results,) = dask.compute(to_compute)
+    else:
+        with Client(
+            n_workers=args.workers,
+            threads_per_worker=1,
+            processes=True,
+        ) as client:
+            LOGGER.info("Dask dashboard: %s", client.dashboard_link)
+            futures = client.compute(to_compute)
+            progress(futures)
+            results = client.gather(futures)
     LOGGER.info("Histogram computation finished in %.1f seconds", perf_counter() - started)
     output_root = Path(args.outdir)
 
