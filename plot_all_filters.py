@@ -3,19 +3,32 @@ import logging
 from pathlib import Path
 from time import perf_counter
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+)
+LOGGER = logging.getLogger(__name__)
+LOGGER.info("Starting plot_all_filters.py")
+
+LOGGER.info("Importing Awkward and Dask")
 import awkward as ak
 import dask
 import dask_awkward as dak
-import egamma_tnp
+
+LOGGER.info("Importing plotting and ROOT I/O packages")
 import mplhep as hep
 import uproot
 import yaml
 from coffea.dataset_tools import preprocess
 from dask.diagnostics import ProgressBar
-from distributed import Client, progress
+
+LOGGER.info("Importing egamma_tnp")
+import egamma_tnp
 from egamma_tnp import ElectronTagNProbeFromNTuples
 from egamma_tnp.plot import plot_ratio
 from egamma_tnp.utils.histogramming import save_hists
+
+LOGGER.info("All Python dependencies imported")
 
 
 PT_BINS = [
@@ -32,7 +45,6 @@ ETA_REGIONS = {
     "endcap_loweta": [1.566, 2.0],
     "endcap_higheta": [2.0, 2.5],
 }
-LOGGER = logging.getLogger(__name__)
 
 
 def parse_args():
@@ -55,7 +67,7 @@ def parse_args():
         "--workers",
         type=int,
         default=1,
-        help="Number of local Dask worker processes (default: 1)",
+        help="Number of local Dask worker threads (default: 1)",
     )
     return parser.parse_args()
 
@@ -71,6 +83,14 @@ def load_hlt_paths(config_path):
             raise ValueError(f"No filters configured for {path_name}")
         if "plateau_cut" not in settings:
             raise ValueError(f"No plateau_cut configured for {path_name}")
+        unknown_overrides = set(settings.get("plateau_cut_overrides", {})) - set(
+            settings["filters"]
+        )
+        if unknown_overrides:
+            raise ValueError(
+                f"Plateau overrides reference unknown filters in {path_name}: "
+                f"{sorted(unknown_overrides)}"
+            )
     return hlt_paths
 
 
@@ -114,8 +134,14 @@ def get_histograms(path):
         }
 
 
-def plot_settings(plot_name, hlt_settings):
-    plateau_cut = hlt_settings["plateau_cut"]
+def get_plateau_cut(hlt_settings, filter_name):
+    return hlt_settings.get("plateau_cut_overrides", {}).get(
+        filter_name, hlt_settings["plateau_cut"]
+    )
+
+
+def plot_settings(plot_name, hlt_settings, filter_name):
+    plateau_cut = get_plateau_cut(hlt_settings, filter_name)
     titles = {
         "barrel_pt": r"$0.00 < |\eta| < 1.44$",
         "endcap_loweta_pt": r"$1.57 < |\eta| < 2.00$",
@@ -145,7 +171,7 @@ def write_plot_pair(
     hlt_settings,
     args,
 ):
-    plot_type, selection = plot_settings(plot_name, hlt_settings)
+    plot_type, selection = plot_settings(plot_name, hlt_settings, filter_name)
     for extension in ("pdf", "png"):
         plot_ratio(
             *reference_hists,
@@ -208,7 +234,7 @@ def main():
                 filter_name,
                 uproot_options={"allow_read_errors_with_report": True},
                 eta_regions_pt=ETA_REGIONS,
-                plateau_cut=settings["plateau_cut"],
+                plateau_cut=get_plateau_cut(settings, filter_name),
             )
             for filter_name in settings["filters"]
         }
@@ -216,19 +242,12 @@ def main():
     dak.necessary_columns(to_compute)
     LOGGER.info("Computing all efficiency histograms with %d worker(s)", args.workers)
     started = perf_counter()
-    if args.workers == 1:
-        with ProgressBar():
-            (results,) = dask.compute(to_compute)
-    else:
-        with Client(
-            n_workers=args.workers,
-            threads_per_worker=1,
-            processes=True,
-        ) as client:
-            LOGGER.info("Dask dashboard: %s", client.dashboard_link)
-            futures = client.compute(to_compute)
-            progress(futures)
-            results = client.gather(futures)
+    with ProgressBar():
+        (results,) = dask.compute(
+            to_compute,
+            scheduler="threads",
+            num_workers=args.workers,
+        )
     LOGGER.info("Histogram computation finished in %.1f seconds", perf_counter() - started)
     output_root = Path(args.outdir)
 
@@ -277,10 +296,6 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s",
-    )
     hep.style.use("CMS")
     hep.style.use(
         {

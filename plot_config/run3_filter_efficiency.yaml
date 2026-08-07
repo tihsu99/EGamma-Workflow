@@ -71,6 +71,17 @@ hlt_paths:
 
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL:
     plateau_cut: 25
+    plateau_cut_overrides:
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLEtLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLClusterShapeLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLHELeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLEcalIsoLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLHcalIsoLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLPixelMatchLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLOneOEMinusOneOPLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLDetaLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLDphiLeg2Filter: 15
+      passHLTEle23Ele12CaloIdLTrackIdLIsoVLTrackIsoLeg2Filter: 15
     filters:
       - passHLTEGL1SingleAndDoubleEGOrPairFilter
       - passHLTEle23Ele12CaloIdLTrackIdLIsoVLEtLeg1Filter
