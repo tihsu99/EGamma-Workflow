@@ -1,5 +1,7 @@
 import argparse
+import logging
 from pathlib import Path
+from time import perf_counter
 
 import awkward as ak
 import dask
@@ -9,6 +11,7 @@ import mplhep as hep
 import uproot
 import yaml
 from coffea.dataset_tools import preprocess
+from dask.diagnostics import ProgressBar
 from egamma_tnp import ElectronTagNProbeFromNTuples
 from egamma_tnp.plot import plot_ratio
 from egamma_tnp.utils.histogramming import save_hists
@@ -28,6 +31,7 @@ ETA_REGIONS = {
     "endcap_loweta": [1.566, 2.0],
     "endcap_higheta": [2.0, 2.5],
 }
+LOGGER = logging.getLogger(__name__)
 
 
 def parse_args():
@@ -157,12 +161,20 @@ def main():
     args = parse_args()
     if args.reference_label == args.target_label:
         raise ValueError("Reference and target labels must be different")
+
+    LOGGER.info("Loading configuration: %s", args.config)
     hlt_paths = load_hlt_paths(args.config)
+    filter_count = sum(len(settings["filters"]) for settings in hlt_paths.values())
+    LOGGER.info("Configured %d HLT paths and %d filters", len(hlt_paths), filter_count)
+
     datasets = {
         args.reference_label: {"files": {args.reference: args.tree}},
         args.target_label: {"files": {args.target: args.tree}},
     }
+    LOGGER.info("Preprocessing reference and target ROOT files")
+    started = perf_counter()
     fileset, _ = preprocess(datasets, step_size=500_000, skip_bad_files=True)
+    LOGGER.info("Preprocessing finished in %.1f seconds", perf_counter() - started)
     all_filters = [
         filter_name
         for settings in hlt_paths.values()
@@ -175,8 +187,10 @@ def main():
         extra_filter=no_run_cut,
     )
 
+    LOGGER.info("Building the Dask task graph")
     to_compute = {}
     for hlt_name, settings in hlt_paths.items():
+        LOGGER.info("  %s: %d filters", hlt_name, len(settings["filters"]))
         egamma_tnp.binning.set(
             "pt_bins", HIGH_PT_BINS if settings.get("high_threshold") else PT_BINS
         )
@@ -191,11 +205,22 @@ def main():
         }
 
     dak.necessary_columns(to_compute)
-    (results,) = dask.compute(to_compute)
+    LOGGER.info("Computing all efficiency histograms")
+    started = perf_counter()
+    with ProgressBar():
+        (results,) = dask.compute(to_compute)
+    LOGGER.info("Histogram computation finished in %.1f seconds", perf_counter() - started)
     output_root = Path(args.outdir)
 
     for hlt_name, settings in hlt_paths.items():
-        for filter_name in settings["filters"]:
+        LOGGER.info("Writing plots for %s", hlt_name)
+        for index, filter_name in enumerate(settings["filters"], start=1):
+            LOGGER.info(
+                "  [%d/%d] %s",
+                index,
+                len(settings["filters"]),
+                filter_name,
+            )
             hists, reports = results[hlt_name][filter_name]
             hist_paths = {}
             for dataset, dataset_hists in hists.items():
@@ -228,9 +253,14 @@ def main():
                     settings,
                     args,
                 )
+    LOGGER.info("Finished. Output written under %s", output_root.resolve())
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(message)s",
+    )
     hep.style.use("CMS")
     hep.style.use(
         {
